@@ -35,6 +35,7 @@ sealed class MetaLensRoute(
     data object Home : MetaLensRoute("home", R.string.tab_home)
     data object History : MetaLensRoute("history", R.string.tab_history)
     data object Settings : MetaLensRoute("settings", R.string.tab_settings)
+    data object Stream : MetaLensRoute("stream", R.string.stream_title)
 }
 
 private val bottomTabs = listOf(
@@ -54,37 +55,51 @@ private fun MetaLensScaffold(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val currentTab = bottomTabs.firstOrNull { it.route == currentRoute } ?: MetaLensRoute.Home
+    val isFullScreenRoute = currentRoute == MetaLensRoute.Stream.route
+    val canNavigateBack = navController.previousBackStackEntry != null
 
     Scaffold(
-        topBar = { MetaLensTopBar(title = stringResource(currentTab.titleResId)) },
+        topBar = {
+            if (!isFullScreenRoute) {
+                MetaLensTopBar(title = stringResource(currentTab.titleResId))
+            } else {
+                MetaLensTopBar(
+                    title = stringResource(R.string.stream_title),
+                    onBack = if (canNavigateBack) ({ navController.popBackStack() }) else null,
+                )
+            }
+        },
         bottomBar = {
-            NavigationBar {
-                bottomTabs.forEach { tab ->
-                    val selected = tab.route == currentRoute
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(tab.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            if (!isFullScreenRoute) {
+                NavigationBar {
+                    bottomTabs.forEach { tab ->
+                        val selected = tab.route == currentRoute
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = {
+                                navController.navigate(tab.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector =
-                                    when (tab) {
-                                        MetaLensRoute.Home -> Icons.Filled.Home
-                                        MetaLensRoute.History -> Icons.Filled.History
-                                        MetaLensRoute.Settings -> Icons.Filled.Settings
-                                    },
-                                contentDescription = stringResource(tab.titleResId),
-                            )
-                        },
-                        label = { Text(stringResource(tab.titleResId), style = MaterialTheme.typography.labelSmall) },
-                    )
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector =
+                                        when (tab) {
+                                            MetaLensRoute.Home -> Icons.Filled.Home
+                                            MetaLensRoute.History -> Icons.Filled.History
+                                            MetaLensRoute.Settings -> Icons.Filled.Settings
+                                            MetaLensRoute.Stream -> Icons.Filled.Home
+                                        },
+                                    contentDescription = stringResource(tab.titleResId),
+                                )
+                            },
+                            label = { Text(stringResource(tab.titleResId), style = MaterialTheme.typography.labelSmall) },
+                        )
+                    }
                 }
             }
         },
@@ -108,6 +123,7 @@ private fun MetaLensNavHost(
         composable(MetaLensRoute.Home.route) {
             HomeScreen(
                 modifier = modifier,
+                onStartStreaming = { navController.navigate(MetaLensRoute.Stream.route) },
             )
         }
         composable(MetaLensRoute.Settings.route) {
@@ -117,6 +133,12 @@ private fun MetaLensNavHost(
         }
         composable(MetaLensRoute.History.route) {
             HistoryScreen(modifier = modifier)
+        }
+        composable(MetaLensRoute.Stream.route) {
+            com.metalens.app.ui.screens.StreamScreen(
+                modifier = modifier,
+                onStop = { navController.popBackStack() },
+            )
         }
     }
 }

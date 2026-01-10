@@ -70,5 +70,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.mwdat.core)
+    implementation(libs.mwdat.camera)
+    implementation(libs.androidx.exifinterface)
 }
 

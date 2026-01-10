@@ -9,9 +9,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import com.meta.wearable.dat.core.types.Permission
+import com.meta.wearable.dat.core.types.PermissionStatus
 import com.meta.wearable.dat.core.Wearables
 import com.metalens.app.ui.navigation.MetaLensApp
+import com.metalens.app.wearables.LocalWearablesPermissionRequester
 import com.metalens.app.wearables.WearablesViewModel
+import kotlin.coroutines.resume
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -19,6 +28,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private val wearablesViewModel: WearablesViewModel by viewModels()
+
+    private var permissionContinuation: CancellableContinuation<PermissionStatus>? = null
+    private val permissionMutex = Mutex()
+    private val permissionsResultLauncher =
+        registerForActivityResult(Wearables.RequestPermissionContract()) { result ->
+            val permissionStatus = result.getOrDefault(PermissionStatus.Denied)
+            permissionContinuation?.resume(permissionStatus)
+            permissionContinuation = null
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +49,22 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                MetaLensApp()
+                CompositionLocalProvider(
+                    LocalWearablesPermissionRequester provides
+                        com.metalens.app.wearables.WearablesPermissionRequester(::requestWearablesPermission),
+                ) {
+                    MetaLensApp()
+                }
+            }
+        }
+    }
+
+    private suspend fun requestWearablesPermission(permission: Permission): PermissionStatus {
+        return permissionMutex.withLock {
+            suspendCancellableCoroutine { continuation ->
+                permissionContinuation = continuation
+                continuation.invokeOnCancellation { permissionContinuation = null }
+                permissionsResultLauncher.launch(permission)
             }
         }
     }

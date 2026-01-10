@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +25,7 @@ import com.metalens.app.ui.components.FeatureActionCard
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onStartStreaming: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -48,7 +51,16 @@ fun HomeScreen(
             title = stringResource(R.string.start_conversation),
             icon = Icons.Filled.PlayArrow,
             onClick = {},
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        FeatureActionCard(
+            title = stringResource(R.string.start_streaming),
+            icon = Icons.Filled.Videocam,
+            onClick = onStartStreaming,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
