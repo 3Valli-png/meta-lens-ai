@@ -18,6 +18,15 @@ object ConversationRuntime {
         _uiState.value = reducer(_uiState.value)
     }
 
+    internal fun clearActiveConversationMeta() {
+        _uiState.value =
+            _uiState.value.copy(
+                activeConversationId = null,
+                conversationStartedAtMs = null,
+                conversationStartMessageIndex = null,
+            )
+    }
+
     internal fun reset() {
         _uiState.value = ConversationUiState()
     }

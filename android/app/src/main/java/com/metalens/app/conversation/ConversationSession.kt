@@ -31,6 +31,17 @@ class ConversationSession(
     private var localInterruptFrames: Int = 0
     private var lastLocalInterruptMs: Long = 0L
 
+    private fun ensureActiveConversationMeta() {
+        val now = System.currentTimeMillis()
+        ConversationRuntime.update { state ->
+            state.copy(
+                activeConversationId = state.activeConversationId ?: java.util.UUID.randomUUID().toString(),
+                conversationStartedAtMs = state.conversationStartedAtMs ?: now,
+                conversationStartMessageIndex = state.conversationStartMessageIndex ?: state.messages.size,
+            )
+        }
+    }
+
     fun start() {
         val status = ConversationRuntime.uiState.value.status
         if (status == ConversationStatus.Connecting ||
@@ -46,6 +57,7 @@ class ConversationSession(
                 recentError = null,
             )
         }
+        ensureActiveConversationMeta()
 
         scope.launch {
             try {

@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.StateFlow
 import androidx.core.content.ContextCompat
+import com.metalens.app.history.ConversationHistoryStorage
 
 class ConversationViewModel(
     application: Application,
@@ -20,6 +21,8 @@ class ConversationViewModel(
     }
 
     fun stop() {
+        // Persist transcript BEFORE stopping the service; stopping can race with resets/navigation.
+        ConversationHistoryStorage(getApplication()).saveFromRuntime()
         val intent =
             Intent(getApplication(), ConversationForegroundService::class.java).apply {
                 action = ConversationForegroundService.ACTION_STOP
@@ -28,7 +31,13 @@ class ConversationViewModel(
     }
 
     fun stopAndReset() {
-        stop()
+        // Persist first, then stop and reset UI state.
+        ConversationHistoryStorage(getApplication()).saveFromRuntime()
+        val intent =
+            Intent(getApplication(), ConversationForegroundService::class.java).apply {
+                action = ConversationForegroundService.ACTION_STOP
+            }
+        getApplication<Application>().startService(intent)
         ConversationRuntime.reset()
     }
 
