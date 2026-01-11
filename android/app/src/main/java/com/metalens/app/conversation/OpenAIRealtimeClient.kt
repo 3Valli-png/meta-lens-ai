@@ -54,6 +54,7 @@ class OpenAIRealtimeClient(
     private var isResponseInProgress: Boolean = false
     private var pendingResponseCreate: Boolean = false
     private val speechStartByItemId = linkedMapOf<String, Long>()
+    private val transcriptDeltaSeenByResponseId = mutableSetOf<String>()
 
     fun connect() {
         if (apiKey.isBlank()) {
@@ -127,6 +128,7 @@ class OpenAIRealtimeClient(
         isResponseInProgress = false
         pendingResponseCreate = false
         speechStartByItemId.clear()
+        transcriptDeltaSeenByResponseId.clear()
     }
 
     fun sendPcm16Audio(pcm16: ByteArray) {
@@ -270,12 +272,24 @@ class OpenAIRealtimeClient(
             "response.audio_transcript.delta" -> {
                 if (!isResponseInProgress) isResponseInProgress = true
                 val delta = obj.optString("delta")
+                val responseId = obj.optString("response_id")
+                if (!responseId.isNullOrBlank()) {
+                    transcriptDeltaSeenByResponseId.add(responseId)
+                }
                 if (!delta.isNullOrBlank()) onAssistantTextDelta(delta)
             }
             "response.audio_transcript.done" -> {
                 if (!isResponseInProgress) isResponseInProgress = true
                 val transcript = obj.optString("transcript")
-                if (!transcript.isNullOrBlank()) onAssistantTextDelta(transcript)
+                val responseId = obj.optString("response_id")
+                // If we've already been receiving transcript deltas for this response,
+                // the `done` transcript is typically the full text and would duplicate.
+                val sawDeltas = !responseId.isNullOrBlank() && transcriptDeltaSeenByResponseId.contains(responseId)
+                if (!sawDeltas && !transcript.isNullOrBlank()) {
+                    onAssistantTextDelta(transcript)
+                } else if (sawDeltas) {
+                    Log.d(TAG, "Ignoring audio_transcript.done to avoid duplication (response_id=$responseId)")
+                }
             }
             "response.text.delta" -> {
                 val delta = obj.optString("delta")
@@ -372,6 +386,7 @@ class OpenAIRealtimeClient(
                     activeResponseId = null
                 }
                 isResponseInProgress = false
+                doneId?.let { transcriptDeltaSeenByResponseId.remove(it) }
 
                 if (status == "failed") {
                     val details = response.optJSONObject("status_details")
@@ -395,6 +410,7 @@ class OpenAIRealtimeClient(
                 // Some servers explicitly emit a cancelled event.
                 activeResponseId = null
                 isResponseInProgress = false
+                transcriptDeltaSeenByResponseId.clear()
                 onAssistantResponseDone()
                 if (pendingResponseCreate) {
                     pendingResponseCreate = false
