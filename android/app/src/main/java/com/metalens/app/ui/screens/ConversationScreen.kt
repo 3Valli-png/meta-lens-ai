@@ -12,20 +12,28 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -68,6 +76,21 @@ fun ConversationScreen(
             }
         }
 
+    LaunchedEffect(Unit) {
+        if (hasMicPermission) {
+            viewModel.start()
+        } else {
+            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            // Ensure the session stops when leaving the screen (back button, navigation, etc.).
+            viewModel.stopAndReset()
+        }
+    }
+
     LaunchedEffect(uiState.messages.size, uiState.messages.lastOrNull()?.text?.length) {
         if (uiState.messages.isNotEmpty()) {
             listState.animateScrollToItem(uiState.messages.lastIndex)
@@ -94,12 +117,6 @@ fun ConversationScreen(
             style = MaterialTheme.typography.titleMedium,
         )
 
-        Text(
-            text = "userSpeaking=${uiState.isUserSpeaking}",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-
         uiState.recentError?.let { error ->
             Text(
                 text = error,
@@ -116,13 +133,17 @@ fun ConversationScreen(
                     .weight(1f)
                     .clip(MaterialTheme.shapes.large)
                     .background(Color.Transparent)
-                    .padding(12.dp),
+                    .padding(start = 12.dp, top = 12.dp, end = 8.dp, bottom = 12.dp),
         ) {
+            val hasTranscript = uiState.messages.any { it.text.isNotBlank() }
+            val showStartSpeakingPlaceholder = !hasTranscript && !uiState.isUserSpeaking
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(end = 14.dp, top = 4.dp, bottom = 4.dp),
+                // Keep a small right padding so bubbles don't overlap the scrollbar.
+                contentPadding = PaddingValues(end = 10.dp, top = 4.dp, bottom = 4.dp),
             ) {
                 items(items = uiState.messages.filter { it.text.isNotBlank() }, key = { it.id }) { msg ->
                     ChatBubble(message = msg, modifier = Modifier.fillMaxWidth())
@@ -137,36 +158,14 @@ fun ConversationScreen(
                         .align(Alignment.CenterEnd)
                         .fillMaxSize(),
             )
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Button(
-                onClick = {
-                    if (hasMicPermission) {
-                        viewModel.start()
-                    } else {
-                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                    }
-                },
-                enabled = uiState.status == ConversationStatus.Idle || uiState.status == ConversationStatus.Error,
-            ) {
-                Text(stringResource(R.string.conversation_start))
-            }
-
-            Button(
-                onClick = { viewModel.stop() },
-                enabled = uiState.status != ConversationStatus.Idle,
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    ),
-            ) {
-                Text(stringResource(R.string.conversation_stop))
+            if (showStartSpeakingPlaceholder) {
+                Text(
+                    text = stringResource(R.string.conversation_start_speaking_placeholder),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.align(Alignment.Center),
+                )
             }
         }
 
@@ -178,14 +177,47 @@ fun ConversationScreen(
             )
         }
 
-        Button(
-            onClick = {
-                viewModel.stop()
-                onStop()
-            },
-            modifier = Modifier.align(Alignment.End),
+        val isInConversation =
+            uiState.status != ConversationStatus.Idle && uiState.status != ConversationStatus.Error
+
+        // Footer with no background color.
+        Row(
+            modifier =
+                Modifier
+                    .navigationBarsPadding()
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("Back")
+            Button(
+                onClick = {
+                    if (isInConversation) {
+                        viewModel.stop()
+                    } else {
+                        if (hasMicPermission) {
+                            viewModel.start()
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                        }
+                    }
+                },
+            ) {
+                Icon(
+                    imageVector = if (isInConversation) Icons.Filled.Pause else Icons.Filled.Mic,
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text =
+                        if (isInConversation) {
+                            stringResource(R.string.conversation_stop)
+                        } else {
+                            stringResource(R.string.conversation_speak)
+                        },
+                )
+            }
         }
     }
 }

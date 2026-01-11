@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
@@ -23,10 +24,12 @@ fun MetaLensTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
+    transparent: Boolean = false,
 ) {
     Surface(
         modifier = modifier,
-        tonalElevation = 2.dp,
+        color = if (transparent) Color.Transparent else MaterialTheme.colorScheme.surface,
+        tonalElevation = if (transparent) 0.dp else 2.dp,
     ) {
         Box(
             modifier =

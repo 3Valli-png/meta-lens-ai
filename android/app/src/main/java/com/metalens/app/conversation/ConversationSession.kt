@@ -303,7 +303,14 @@ class ConversationSession(
 
         audioIo.stop()
 
-        ConversationRuntime.reset()
+        // Stop session but keep transcript in UI.
+        ConversationRuntime.update {
+            it.copy(
+                status = ConversationStatus.Idle,
+                isUserSpeaking = false,
+                recentError = null,
+            )
+        }
         userMessageByItemId.clear()
         pendingUserPlaceholderJobs.values.forEach { it.cancel() }
         pendingUserPlaceholderJobs.clear()

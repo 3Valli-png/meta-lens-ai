@@ -27,6 +27,11 @@ class ConversationViewModel(
         getApplication<Application>().startService(intent)
     }
 
+    fun stopAndReset() {
+        stop()
+        ConversationRuntime.reset()
+    }
+
     fun sendText(text: String) {
         val trimmed = text.trim()
         if (trimmed.isBlank()) return

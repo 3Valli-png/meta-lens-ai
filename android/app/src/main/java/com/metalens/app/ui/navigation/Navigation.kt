@@ -75,6 +75,7 @@ private fun MetaLensScaffold(navController: NavHostController) {
                 MetaLensTopBar(
                     title = topBarTitle,
                     onBack = if (canNavigateBack) ({ navController.popBackStack() }) else null,
+                    transparent = true,
                 )
             }
         },

@@ -9,7 +9,9 @@
     <string name="start_conversation">Start Conversation</string>
     <string name="conversation_title">Conversation</string>
     <string name="conversation_start">Start</string>
+    <string name="conversation_speak">Speak</string>
     <string name="conversation_stop">Stop</string>
+    <string name="conversation_start_speaking_placeholder">Start speaking...</string>
     <string name="conversation_status_idle">Status: idle</string>
     <string name="conversation_status_connecting">Status: connecting</string>
     <string name="conversation_status_listening">Status: listening</string>
