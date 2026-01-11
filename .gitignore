@@ -87,5 +87,9 @@ lint/tmp/
 # Kotlin
 *.kotlin_module
 
+# Kotlin/Android Studio caches (module-level)
+android/.kotlin/
+*.salive
+
 # Mac
 .DS_Store
