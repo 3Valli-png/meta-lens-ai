@@ -70,5 +70,6 @@ After enabling `Developer Mode` in the Meta AI app, follow the steps below:
 3. Open the APK and complete the installation.
 4. Open **MetaLens** and go to settings click "Connect my glasses", turn the toggle on, and connect to your glasses.
 5. Open the OpenAI API Key settings and enter your OpenAI API key, your API key should start with `sk-proj-`.
-6. Go to the Home screen—if the buttons are not grayed out, you’re good to go.
+6. Click Connection Check; if the provided API key is correct, you should see a “Connection OK” status.
+7. Go to the Home screen—if the buttons are not grayed out, you’re good to go.
 
