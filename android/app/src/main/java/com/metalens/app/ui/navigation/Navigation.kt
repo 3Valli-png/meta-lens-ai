@@ -2,6 +2,7 @@ package com.metalens.app.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Settings
@@ -49,6 +50,7 @@ sealed class MetaLensRoute(
     data object Settings : MetaLensRoute("settings", R.string.tab_settings)
     data object Stream : MetaLensRoute("stream", R.string.stream_title)
     data object Conversation : MetaLensRoute("conversation", R.string.conversation_title)
+    data object PictureAnalysis : MetaLensRoute("picture-analysis", R.string.picture_analysis)
 }
 
 private val bottomTabs = listOf(
@@ -71,7 +73,8 @@ private fun MetaLensScaffold(navController: NavHostController) {
     val isFullScreenRoute =
         currentRoute == MetaLensRoute.Stream.route ||
             currentRoute == MetaLensRoute.Conversation.route ||
-            currentRoute == MetaLensRoute.HistoryDetail.route
+            currentRoute == MetaLensRoute.HistoryDetail.route ||
+            currentRoute == MetaLensRoute.PictureAnalysis.route
     val canNavigateBack = navController.previousBackStackEntry != null
     val topBarTitle = stringResource(R.string.home_title)
 
@@ -113,6 +116,7 @@ private fun MetaLensScaffold(navController: NavHostController) {
                                             MetaLensRoute.Settings -> Icons.Filled.Settings
                                             MetaLensRoute.Stream -> Icons.Filled.Home
                                             MetaLensRoute.Conversation -> Icons.Filled.Home
+                                            MetaLensRoute.PictureAnalysis -> Icons.Filled.CameraAlt
                                         },
                                     contentDescription = stringResource(tab.titleResId),
                                 )
@@ -147,8 +151,13 @@ private fun MetaLensNavHost(
             HomeScreen(
                 modifier = modifier,
                 isGlassesConnected = wearablesUiState.hasActiveDevice,
+                isCapturingPhoto = wearablesUiState.isCapturingPhoto || wearablesUiState.isPreparingPhotoSession,
                 onStartConversation = { navController.navigate(MetaLensRoute.Conversation.route) },
                 onStartStreaming = { navController.navigate(MetaLensRoute.Stream.route) },
+                onPictureAnalysis = {
+                    wearablesViewModel.resetPictureAnalysis()
+                    navController.navigate(MetaLensRoute.PictureAnalysis.route)
+                },
             )
         }
         composable(MetaLensRoute.Settings.route) {
@@ -184,6 +193,12 @@ private fun MetaLensNavHost(
             ConversationScreen(
                 modifier = modifier,
                 onStop = { navController.popBackStack() },
+            )
+        }
+        composable(MetaLensRoute.PictureAnalysis.route) {
+            com.metalens.app.ui.screens.PictureAnalysisScreen(
+                modifier = modifier,
+                onClose = { navController.popBackStack() },
             )
         }
     }

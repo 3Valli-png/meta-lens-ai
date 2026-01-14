@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Icon
@@ -30,8 +31,10 @@ import com.metalens.app.ui.components.FeatureActionCard
 fun HomeScreen(
     modifier: Modifier = Modifier,
     isGlassesConnected: Boolean = false,
+    isCapturingPhoto: Boolean = false,
     onStartConversation: () -> Unit = {},
     onStartStreaming: () -> Unit = {},
+    onPictureAnalysis: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -71,6 +74,22 @@ fun HomeScreen(
             icon = Icons.Filled.Videocam,
             enabled = isGlassesConnected,
             onClick = onStartStreaming,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        FeatureActionCard(
+            title =
+                if (isCapturingPhoto) {
+                    stringResource(R.string.picture_analysis_capturing)
+                } else {
+                    stringResource(R.string.picture_analysis)
+                },
+            subtitle = stringResource(R.string.picture_analysis_subtitle),
+            icon = Icons.Filled.CameraAlt,
+            enabled = isGlassesConnected && !isCapturingPhoto,
+            onClick = onPictureAnalysis,
             modifier = Modifier.fillMaxWidth(),
         )
     }
