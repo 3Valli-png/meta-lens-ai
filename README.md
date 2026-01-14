@@ -57,7 +57,7 @@ You’ll also need to enable Developer Mode in the Meta View app. Don’t worry 
 > 4. Enable the **Developer Mode** toggle  
 > 5. Tap **Enable** to confirm
 >
-> ![Meta AI Developer Mode](docs/images/meta-view-develop-mode.png)
+> <img src="docs/images/meta-view-develop-mode.png" alt="Meta AI Developer Mode" width="70%" />
 >
 > See [Meta Wearables Setup Guide](https://wearables.developer.meta.com/docs/getting-started-toolkit) for detailed instructions.
 
