@@ -73,7 +73,7 @@
 
     <string name="picture_analysis_analyze">Analyze</string>
     <string name="picture_analysis_analyzing">Analyzing…</string>
-    <string name="picture_analysis_result">Result</string>
+    <string name="picture_analysis_result">AI Picture Analysis Result</string>
     <string name="picture_analysis_speak">Speak</string>
     <string name="picture_analysis_stop_speaking">Stop</string>
 </resources>
