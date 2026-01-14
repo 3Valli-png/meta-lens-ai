@@ -1,6 +1,7 @@
 package com.metalens.app.conversation
 
 import android.content.Context
+import com.metalens.app.R
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -66,11 +67,13 @@ class ConversationSession(
 
                 val apiKey = AppSettings.getOpenAiApiKey(appContext).trim()
                 val model = AppSettings.getOpenAiModel(appContext).trim()
+                val systemInstructions = appContext.getString(R.string.conversation_system_instructions).trim()
 
                 val client =
                     OpenAIRealtimeClient(
                         apiKey = apiKey,
                         model = model.ifBlank { OpenAIRealtimeClient.DEFAULT_MODEL },
+                        instructions = systemInstructions,
                         onConnected = {
                             ConversationRuntime.update { it.copy(status = ConversationStatus.Listening) }
                         },

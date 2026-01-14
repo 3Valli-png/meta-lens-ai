@@ -23,6 +23,7 @@ class OpenAIRealtimeClient(
     private val apiKey: String,
     private val model: String = DEFAULT_MODEL,
     private val voice: String = DEFAULT_VOICE,
+    private val instructions: String? = null,
     private val onConnected: () -> Unit,
     private val onDisconnected: (reason: String) -> Unit,
     private val onError: (message: String) -> Unit,
@@ -223,6 +224,12 @@ class OpenAIRealtimeClient(
                 .put("input_audio_format", "pcm16")
                 .put("output_audio_format", "pcm16")
                 .put("voice", voice)
+                .apply {
+                    val normalized = instructions?.trim()
+                    if (!normalized.isNullOrBlank()) {
+                        put("instructions", normalized)
+                    }
+                }
                 // We manually trigger `response.create` on speech end for reliability.
                 .put(
                     "turn_detection",
