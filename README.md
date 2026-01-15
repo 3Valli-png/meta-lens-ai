@@ -49,7 +49,7 @@ To run MetaLens AI app, make sure the following checklist is completed:
 - Stable internet connection
 - Bluetooth enabled on your phone
 - Meta AI app installed on your phone
-- ⚠️ Developer Mode enabled in the Meta AI app
+- Developer Mode enabled in the Meta AI app ⚠️ 
 - Glasses connected to the Meta AI app
 - MetaLens AI connected to Meta AI app Settings -> "Connect my glasses" status Connected. Glasses visible on the "Connected devices" list.
 - OpenAI API key set in Settings
