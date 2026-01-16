@@ -2,6 +2,10 @@
 
 Talk to ChatGPT, take pictures, and analyze what you see through your Meta Glasses.
 
+> 📥 **Quick download**
+> - **Android**: Download the latest `.apk`, then follow the installation steps below.
+> - **iOS**: Work in progress.
+
 ## UI Preview
 
 <p align="center">
@@ -94,3 +98,10 @@ Critical Steps to Run MetaLens on Your Android Phone.
 - Your OpenAI API key is stored locally on your phone, is never logged, and is shared only with the OpenAI platform to enable AI processing.
 - API communications use HTTPS encryption.
 - The app complies with Meta’s privacy policies.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+This repository contains the open-source core of MetaLensAI.
+A more refined build focused on everyday use will be available separately.
