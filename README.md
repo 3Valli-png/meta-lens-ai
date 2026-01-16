@@ -102,6 +102,3 @@ Critical Steps to Run MetaLens on Your Android Phone.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-This repository contains the open-source core of MetaLensAI.
-A more refined build focused on everyday use will be available separately.
