@@ -1,6 +1,6 @@
 ## MetaLens AI
 
-Talk to ChatGPT, take pictures, and analyze what you see through your Meta Glasses.
+Talk to ChatGPT, take photos, let AI analyze what you see, and live-stream directly from your Meta Glasses to YouTube.
 
 > 📥 **Quick download**
 > - **Android Beta Version**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.1.0/meta-lens-ai-v0.1.0.apk), then follow the installation steps below.
@@ -20,23 +20,20 @@ Talk to ChatGPT, take pictures, and analyze what you see through your Meta Glass
 
 ## Application features
 
-### 🏠 Home
-The landing screen with access to live conversations with ChatGPT, live streaming, and picture analysis through your smart glasses.
+### <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube" height="16">
+Live-stream what the glasses’ camera sees to YouTube with hands-free control.
 
-### 🕘 History
-A conversation archive that lets you review your previous conversations session.
+### <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" height="16"> Conversation
+A hands-free voice conversation with ChatGPT, including a live transcript view.
 
-### ⚙️ Settings
-Configuration for connecting your smart glasses and setting up your ChatGPT access.
-
-### 💬 Conversation
-A hands-free voice conversation view with a live transcript.
-
-### 📷 Analysis
+### 👁️ Analysis
 Take a picture and get an on-screen description/analysis of what the glasses camera sees.
 
-### 📡 Streaming
-Live stream what the glasses camera sees for continuous, hands-free assistance.
+### 🕘 History
+Review past conversation sessions using your selected ChatGPT model.
+
+### ⚙️ Settings
+Connect your smart glasses, choose video quality, and set up ChatGPT and YouTube access.
 
 ## Installing MetaLens AI (Important Information)
 
@@ -105,7 +102,7 @@ Example installation screens on a Xiaomi Poco F6:
 6. On first launch, allow the nearby devices permission so MetaLens can connect to your glasses.
 7. Open **Settings** and tap **Connect my glasses**.
 8. On the Meta device prompt, enable the toggle and tap **Connect** to allow MetaLens to pair.
-9. Get your [OpenAI API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key?utm_source=chatgpt.com) from the OpenAI platform and paste it into the field and save it.
+9. Get your [OpenAI API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key) from the OpenAI platform and paste it into the field and save it.
 10. Tap **Check Connection**; if it shows **Connection OK**, you’re ready to go.
 
 ## Privacy and Security

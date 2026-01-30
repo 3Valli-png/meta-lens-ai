@@ -194,26 +194,41 @@ fun SettingsScreen(
             textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text(stringResource(R.string.settings_openai_api_key)) },
             text = {
-                OutlinedTextField(
-                    value = apiKeyDraft,
-                    onValueChange = { apiKeyDraft = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    visualTransformation =
-                        if (apiKeyVisible) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = apiKeyDraft,
+                        onValueChange = { apiKeyDraft = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        visualTransformation =
+                            if (apiKeyVisible) {
+                                VisualTransformation.None
+                            } else {
+                                PasswordVisualTransformation()
+                            },
+                        trailingIcon = {
+                            IconButton(onClick = { apiKeyVisible = !apiKeyVisible }) {
+                                Icon(
+                                    imageVector = if (apiKeyVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                    contentDescription = null,
+                                )
+                            }
                         },
-                    trailingIcon = {
-                        IconButton(onClick = { apiKeyVisible = !apiKeyVisible }) {
-                            Icon(
-                                imageVector = if (apiKeyVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                )
+                    )
+                    TextButton(
+                        onClick = {
+                            val intent =
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key"),
+                                )
+                            context.startActivity(intent)
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(stringResource(R.string.settings_openai_api_key_help))
+                    }
+                }
             },
             confirmButton = {
                 TextButton(
@@ -1159,4 +1174,3 @@ private suspend fun fetchLatestReleaseInfo(): Result<ReleaseInfo> {
 private fun SettingsScreenPreview() {
     SettingsScreen()
 }
-

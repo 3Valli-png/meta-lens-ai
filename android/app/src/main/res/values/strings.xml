@@ -46,6 +46,7 @@
     <string name="settings_camera_quality_medium_desc">Balanced (504×896)</string>
     <string name="settings_camera_quality_high_desc">Battery-intensive (720×1280)</string>
     <string name="settings_openai_api_key">OpenAI API key</string>
+    <string name="settings_openai_api_key_help">Where do I find my API key?</string>
     <string name="settings_openai_model">OpenAI Model</string>
     <string name="settings_openai_model_gpt4o_desc">A high-capability larger, more capable and higher cost model</string>
     <string name="settings_openai_model_gpt4omini_desc">A lightweight model optimized for cost-efficient usage</string>
@@ -107,4 +108,3 @@
     <string name="picture_analysis_speak">Speak</string>
     <string name="picture_analysis_stop_speaking">Stop</string>
 </resources>
-
