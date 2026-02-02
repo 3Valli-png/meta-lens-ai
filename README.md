@@ -2,6 +2,10 @@
 
 Talk to ChatGPT, take photos, let AI analyze what you see, and live-stream directly from your Meta Glasses to YouTube or Twitch.
 
+> [!NOTE]
+> **Developer Mode** must be enabled in the Meta View app before you start. See instructions below.
+
+
 > 📥 **Quick download**
 > - **Android Beta Version**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.3.0/meta-lens-ai-v0.3.0.apk), then follow the installation steps below.
 > - **iOS**: Work in progress. Follow updates and early access at [metalensai.com](https://metalensai.com/).
@@ -69,7 +73,8 @@ Critical Steps to Run MetaLens on Your Android Phone.
 
 1) Developer Mode enabled in the Meta AI app:
 
-> ⚠️ **Developer Mode Required**  - Before You Start Instalation MetLens AI
+> [!WARNING]
+> **Developer Mode Required**  - Before You Start Instalation MetLens AI
 > Your Meta glasses must have **Developer Mode enabled** in the Meta AI app before the MetaLens AI app can connect to them.
 > **How to enable:**  
 > 1. Open **Meta AI** app on your phone  
