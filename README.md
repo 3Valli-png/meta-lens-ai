@@ -38,7 +38,7 @@ Live-stream what the glasses’ camera sees to Twitch with hands-free control.
 > background activity, which can cause the stream to pause or disconnect.
 > ``Settings → Battery →  MetaLens AI (app must be running) → Battery Saver → No restriction``
 >
-> Watch this short [walkthrough](https://www.youtube.com/shorts/-JmbuCbm_T8) or [this one](https://www.youtube.com/shorts/wvCGgyorcVs).
+> Watch this short [walkthrough](https://www.youtube.com/shorts/-JmbuCbm_T8) or [this one](https://youtube.com/shorts/wvCGgyorcVs).
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" height="16"> Conversation
 A hands-free voice conversation with ChatGPT, including a live transcript view.
@@ -142,18 +142,22 @@ If this project is useful to you, you can support its development here:
   **A:** Make sure **Developer Mode** is enabled in the Meta AI app, the glasses are connected in Meta AI. Watch this [short tutorial](https://www.youtube.com/shorts/v34u_DYSRBM).
 
 - **Q: The stream pauses or disconnects.**  
-  **A:** Disable battery restrictions for MetaLens AI ([video tutorial](https://www.youtube.com/shorts/-JmbuCbm_T8)):  
+  **A:** Disable battery restrictions for MetaLens AI ([video tutorial](https://youtube.com/shorts/wvCGgyorcVs)):  
   `Settings → Battery → MetaLens AI → Battery Saver → No restriction`.
 
 - **Q: The Bluetooth disconnects.**  
-  **A:** Disable battery restrictions for MetaLens AI ([video tutorial](https://www.youtube.com/shorts/-JmbuCbm_T8)):  
+  **A:** Disable battery restrictions for MetaLens AI ([video tutorial](https://youtube.com/shorts/wvCGgyorcVs)):  
   `Settings → Battery → MetaLens AI → Battery Saver → No restriction`.  
 
 - **Q: I can’t see the app in the Play Store.**  
   **A:** MetaLens AI uses a new Meta SDK not yet publicly released, so it’s distributed via APK for now.
 
-- **Q: “Connection OK” fails in AI Settings.**  
+- **Q: "Connection OK" fails in AI Settings.**  
   **A:** Verify your OpenAI API key is valid, saved, and that your phone has internet access.
+
+- **Q: How to update MetaLens AI?**
+  **A:** In the MetaLens AI app, go to "Settings', scroll down to the "About" section, and tap "Version".  If you’re not up to date, tap "Open release" link, find the latest release, download **.apk** file, and install it.
+  See this [short tutorial](https://www.youtube.com/shorts/vsWqIRdu12c).
 
 - **Q: iOS version?**  
   **A:** iOS is in progress, follow updates at [metalensai.com](https://metalensai.com/).
