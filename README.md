@@ -38,7 +38,7 @@ Live-stream what the glasses’ camera sees to Twitch with hands-free control.
 > background activity, which can cause the stream to pause or disconnect.
 > ``Settings → Battery →  MetaLens AI (app must be running) → Battery Saver → No restriction``
 >
-> Watch this short [walkthrough](https://www.youtube.com/shorts/-JmbuCbm_T8) or [this one](https://youtube.com/shorts/QVVm1t4VBfk).
+> Watch this short [walkthrough](https://www.youtube.com/shorts/-JmbuCbm_T8) or [this one](https://www.youtube.com/shorts/wvCGgyorcVs).
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" height="16"> Conversation
 A hands-free voice conversation with ChatGPT, including a live transcript view.
