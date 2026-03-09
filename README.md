@@ -7,7 +7,7 @@ Talk to ChatGPT, take photos, let AI analyze what you see, and live-stream direc
 
 
 > 📥 **Quick download**
-> - **Android**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.7.0/meta-lens-ai-v0.7.0.apk) on your phone ([see video](https://youtube.com/shorts/QVVm1t4VBfk)),then follow the installation steps below.
+> - **Android**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.8.0/meta-lens-ai-v0.8.0.apk) on your phone ([see video](https://youtube.com/shorts/QVVm1t4VBfk)),then follow the installation steps below.
 > - **iOS**: Work in progress. Follow updates and early access at [metalensai.com](https://metalensai.com/).
 
 ## UI Preview
@@ -41,8 +41,9 @@ Live-stream what the glasses’ camera sees to Kick with hands-free control.
 [<img src="docs/icons/kick_logo.svg" width="14" alt="Kick" />
 **Watch walkthrough how to stream to Kick**](https://www.youtube.com/shorts/VJsQOe5s8-M)
 
-Unlimited-length recordings video on your phone<br />
-[🎥 **See how**](https://www.youtube.com/shorts/fEevqmGu-F8)
+### 🔴 REC
+Unlimited-length recordings video on your phone<br /><br />
+[🎥 **See how**](https://www.youtube.com/shorts/fEevqmGu-F8)<br />
 
 > [!TIP]
 > For the best streaming experience in MetaLens AI, battery restrictions for the app should be disabled.
@@ -125,7 +126,7 @@ Example installation screens on a Xiaomi Poco F6:
   <img src="docs/screenshots/instalation/step8.jpg" width="24%" alt="Installation Step 8" />
 </p>
 
-1. Open this page on your phone and tap the [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.7.0/meta-lens-ai-v0.7.0.apk) download. When prompted, choose Settings to allow installs from this source.
+1. Open this page on your phone and tap the [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.8.0/meta-lens-ai-v0.8.0.apk) download. When prompted, choose Settings to allow installs from this source.
 2. Read the warning and confirm you understand the risk.
 3. Toggle **Allow from this source** to ON.
 4. Confirm the **Install** prompt for MetaLens and wait for installation to finish.
