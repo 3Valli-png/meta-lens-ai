@@ -7,7 +7,7 @@ Talk to ChatGPT, take photos, let AI analyze what you see, and live-stream direc
 
 
 > 📥 **Quick download**
-> - **Android**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.9.0/meta-lens-ai-v0.9.0.apk) on your phone ([see video](https://youtube.com/shorts/QVVm1t4VBfk)),then follow the installation steps below.
+> - **Android**: Download the latest [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.10.0/meta-lens-ai-v0.10.0.apk) on your phone ([see video](https://youtube.com/shorts/QVVm1t4VBfk)),then follow the installation steps below.
 > - **iOS**: Work in progress. Follow updates and early access at [metalensai.com](https://metalensai.com/).
 
 ## UI Preview
@@ -55,10 +55,12 @@ Unlimited-length recordings video on your phone<br /><br />
 > In case of any issues, head here: https://metalensai.com/faq/ or contact us: metalensai@gmail.com.
 
 ### 👁️ Live Vision AI
-Bring real-time scene understanding to Meta glasses. Users can speak naturally, share live visual context from the glasses camera, and receive fast AI responses based on what is happening in front of them. The experience combines live preview, voice conversation, and on-demand image analysis in a single flow.
+Bring real-time scene understanding to Meta glasses. Users can speak naturally, share live visual context from the glasses camera, and receive fast AI responses based on what is happening in front of them. The experience combines live preview, voice conversation, and on-demand image analysis in a single flow.<br /><br />
+[See Live Vision AI with ChatGPT-5 on Meta Ray-Ban Smart Glasses in action.](https://www.youtube.com/shorts/N0stiJMb9BI)
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" height="16"> Conversation
-A hands-free voice conversation with ChatGPT, including a live transcript view.
+A hands-free voice conversation with ChatGPT, including a live transcript view.<br /><br />
+[Demo of ChatGPT Voice Control on Meta Smart Glasses](https://www.youtube.com/shorts/5tXmhzA72JI)
 
 ### 📸 Picture Analysis
 Take a picture and get an on-screen description/analysis of what the glasses camera sees.
@@ -129,7 +131,7 @@ Example installation screens on a Xiaomi Poco F6:
   <img src="docs/screenshots/instalation/step8.jpg" width="24%" alt="Installation Step 8" />
 </p>
 
-1. Open this page on your phone and tap the [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.9.0/meta-lens-ai-v0.9.0.apk) download. When prompted, choose Settings to allow installs from this source.
+1. Open this page on your phone and tap the [.apk](https://github.com/przemek-nowicki/meta-lens-ai/releases/download/v0.10.0/meta-lens-ai-v0.10.0.apk) download. When prompted, choose Settings to allow installs from this source.
 2. Read the warning and confirm you understand the risk.
 3. Toggle **Allow from this source** to ON.
 4. Confirm the **Install** prompt for MetaLens and wait for installation to finish.
