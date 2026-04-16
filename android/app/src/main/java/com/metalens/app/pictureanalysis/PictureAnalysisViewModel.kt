@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 class PictureAnalysisViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
-    private val service = OpenAIImageAnalysisService()
+    private val openAiService = OpenAIImageAnalysisService()
+    private val claudeService = ClaudeImageAnalysisService()
 
     private val _uiState = MutableStateFlow(PictureAnalysisUiState())
     val uiState: StateFlow<PictureAnalysisUiState> = _uiState.asStateFlow()
@@ -40,27 +41,40 @@ class PictureAnalysisViewModel(
                 _uiState.update { it.copy(isAnalyzing = true, recentError = null) }
 
                 val ctx = getApplication<Application>().applicationContext
-                val apiKey = AppSettings.getOpenAiApiKey(ctx).trim()
-
-                // Settings model is currently tuned for Realtime. If it's a realtime model, map to a stable vision-capable model.
-                val configuredModel = AppSettings.getOpenAiModel(ctx).trim()
-                val model =
-                    if (configuredModel.contains("realtime", ignoreCase = true)) {
-                        "gpt-4o-mini"
-                    } else {
-                        configuredModel.ifBlank { "gpt-4o-mini" }
-                    }
-
                 val prompt = AppSettings.getPictureAnalysisSystemInstructions(ctx).trim()
+                val provider = AppSettings.getImageAnalysisProvider(ctx)
 
                 val result =
                     withContext(Dispatchers.IO) {
-                        service.analyzeImage(
-                            apiKey = apiKey,
-                            model = model,
-                            prompt = prompt,
-                            bitmap = bitmap,
-                        )
+                        when (provider) {
+                            ImageAnalysisProvider.OPENAI -> {
+                                val apiKey = AppSettings.getOpenAiApiKey(ctx).trim()
+                                val configuredModel = AppSettings.getOpenAiModel(ctx).trim()
+                                // Settings model is currently tuned for Realtime. If it's a realtime model, map to a stable vision-capable model.
+                                val model =
+                                    if (configuredModel.contains("realtime", ignoreCase = true)) {
+                                        "gpt-4o-mini"
+                                    } else {
+                                        configuredModel.ifBlank { "gpt-4o-mini" }
+                                    }
+                                openAiService.analyzeImage(
+                                    apiKey = apiKey,
+                                    model = model,
+                                    prompt = prompt,
+                                    bitmap = bitmap,
+                                )
+                            }
+                            ImageAnalysisProvider.ANTHROPIC -> {
+                                val apiKey = AppSettings.getAnthropicApiKey(ctx).trim()
+                                val model = AppSettings.getAnthropicModel(ctx).trim()
+                                claudeService.analyzeImage(
+                                    apiKey = apiKey,
+                                    model = model.ifBlank { AppSettings.DEFAULT_ANTHROPIC_MODEL },
+                                    prompt = prompt,
+                                    bitmap = bitmap,
+                                )
+                            }
+                        }
                     }
 
                 result.fold(

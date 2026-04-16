@@ -50,6 +50,15 @@
     <string name="settings_openai_model">OpenAI Model</string>
     <string name="settings_openai_model_gpt4o_desc">A high-capability larger, more capable and higher cost model</string>
     <string name="settings_openai_model_gpt4omini_desc">A lightweight model optimized for cost-efficient usage</string>
+    <string name="settings_image_analysis_provider">Image analysis provider</string>
+    <string name="settings_image_analysis_provider_openai">OpenAI (ChatGPT)</string>
+    <string name="settings_image_analysis_provider_anthropic">Anthropic (Claude)</string>
+    <string name="settings_anthropic_api_key">Anthropic API key</string>
+    <string name="settings_anthropic_api_key_help">Where do I find my Anthropic API key?</string>
+    <string name="settings_anthropic_model">Claude model</string>
+    <string name="settings_anthropic_model_opus_desc">Highest quality reasoning</string>
+    <string name="settings_anthropic_model_sonnet_desc">Balanced quality and speed</string>
+    <string name="settings_anthropic_model_haiku_desc">Fastest and lowest cost</string>
     <string name="settings_ai_personalize">Personalize</string>
     <string name="settings_ai_personalize_subtitle">Customize system instructions</string>
     <string name="settings_ai_personalize_title">Personalize AI</string>

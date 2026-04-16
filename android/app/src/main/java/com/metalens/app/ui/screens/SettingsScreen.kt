@@ -71,6 +71,7 @@ import com.metalens.app.wearables.WearablesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.meta.wearable.dat.camera.types.VideoQuality
 import com.metalens.app.conversation.OpenAIRealtimeClient
+import com.metalens.app.pictureanalysis.ImageAnalysisProvider
 import com.metalens.app.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -120,11 +121,37 @@ fun SettingsScreen(
         mutableStateOf(initial)
     }
 
+    val anthropicModelOptions =
+        rememberSaveable {
+            listOf(
+                "claude-opus-4-7",
+                "claude-sonnet-4-6",
+                "claude-haiku-4-5",
+            )
+        }
+
+    var imageProvider by rememberSaveable {
+        mutableStateOf(AppSettings.getImageAnalysisProvider(context).storageValue)
+    }
+    var anthropicApiKey by rememberSaveable { mutableStateOf(AppSettings.getAnthropicApiKey(context)) }
+    var anthropicKeyVisible by rememberSaveable { mutableStateOf(false) }
+    var anthropicModel by rememberSaveable {
+        val saved = AppSettings.getAnthropicModel(context).trim()
+        val initial = saved.takeIf { it in anthropicModelOptions } ?: AppSettings.DEFAULT_ANTHROPIC_MODEL
+        mutableStateOf(initial)
+    }
+
     var showEditApiKeyDialog by rememberSaveable { mutableStateOf(false) }
     var showSelectModelDialog by rememberSaveable { mutableStateOf(false) }
     var showPersonalizeAiDialog by rememberSaveable { mutableStateOf(false) }
+    var showSelectImageProviderDialog by rememberSaveable { mutableStateOf(false) }
+    var showEditAnthropicKeyDialog by rememberSaveable { mutableStateOf(false) }
+    var showSelectAnthropicModelDialog by rememberSaveable { mutableStateOf(false) }
     var apiKeyDraft by rememberSaveable { mutableStateOf(openAiApiKey) }
     var modelDraft by rememberSaveable { mutableStateOf(openAiModel) }
+    var imageProviderDraft by rememberSaveable { mutableStateOf(imageProvider) }
+    var anthropicApiKeyDraft by rememberSaveable { mutableStateOf(anthropicApiKey) }
+    var anthropicModelDraft by rememberSaveable { mutableStateOf(anthropicModel) }
 
     var selectedAiModule by rememberSaveable { mutableStateOf(AiInstructionsModule.Vision) }
     var visionInstructionsDraft by rememberSaveable { mutableStateOf("") }
@@ -183,6 +210,25 @@ fun SettingsScreen(
     LaunchedEffect(showSelectCameraQualityDialog) {
         if (showSelectCameraQualityDialog) {
             cameraQualityDraft = cameraQuality
+        }
+    }
+
+    LaunchedEffect(showSelectImageProviderDialog) {
+        if (showSelectImageProviderDialog) {
+            imageProviderDraft = imageProvider
+        }
+    }
+
+    LaunchedEffect(showEditAnthropicKeyDialog) {
+        if (showEditAnthropicKeyDialog) {
+            anthropicApiKeyDraft = anthropicApiKey
+            anthropicKeyVisible = false
+        }
+    }
+
+    LaunchedEffect(showSelectAnthropicModelDialog) {
+        if (showSelectAnthropicModelDialog) {
+            anthropicModelDraft = anthropicModel
         }
     }
 
@@ -307,6 +353,190 @@ fun SettingsScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         ),
                     onClick = { showSelectModelDialog = false },
+                ) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            },
+        )
+    }
+
+    if (showSelectImageProviderDialog) {
+        AlertDialog(
+            onDismissRequest = { showSelectImageProviderDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
+            title = { Text(stringResource(R.string.settings_image_analysis_provider)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ImageAnalysisProvider.values().forEach { provider ->
+                        val isSelected = provider.storageValue == imageProviderDraft
+                        val providerLabel =
+                            when (provider) {
+                                ImageAnalysisProvider.OPENAI -> stringResource(R.string.settings_image_analysis_provider_openai)
+                                ImageAnalysisProvider.ANTHROPIC -> stringResource(R.string.settings_image_analysis_provider_anthropic)
+                            }
+                        FeatureActionCard(
+                            title = providerLabel,
+                            subtitle = null,
+                            icon = if (isSelected) Icons.Filled.CheckCircle else Icons.Filled.Psychology,
+                            onClick = { imageProviderDraft = provider.storageValue },
+                            enabled = true,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    onClick = {
+                        val selected = ImageAnalysisProvider.fromStorage(imageProviderDraft)
+                        AppSettings.setImageAnalysisProvider(context, selected)
+                        imageProvider = selected.storageValue
+                        showSelectImageProviderDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.common_save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    onClick = { showSelectImageProviderDialog = false },
+                ) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            },
+        )
+    }
+
+    if (showEditAnthropicKeyDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditAnthropicKeyDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
+            title = { Text(stringResource(R.string.settings_anthropic_api_key)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = anthropicApiKeyDraft,
+                        onValueChange = { anthropicApiKeyDraft = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        visualTransformation =
+                            if (anthropicKeyVisible) {
+                                VisualTransformation.None
+                            } else {
+                                PasswordVisualTransformation()
+                            },
+                        trailingIcon = {
+                            IconButton(onClick = { anthropicKeyVisible = !anthropicKeyVisible }) {
+                                Icon(
+                                    imageVector = if (anthropicKeyVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                    )
+                    TextButton(
+                        onClick = {
+                            val intent =
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://docs.claude.com/en/api/getting-started"),
+                                )
+                            context.startActivity(intent)
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(stringResource(R.string.settings_anthropic_api_key_help))
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    onClick = {
+                        val normalized = anthropicApiKeyDraft.trim()
+                        AppSettings.setAnthropicApiKey(context, normalized)
+                        anthropicApiKey = normalized
+                        showEditAnthropicKeyDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.common_save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    onClick = { showEditAnthropicKeyDialog = false },
+                ) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            },
+        )
+    }
+
+    if (showSelectAnthropicModelDialog) {
+        AlertDialog(
+            onDismissRequest = { showSelectAnthropicModelDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
+            title = { Text(stringResource(R.string.settings_anthropic_model)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    anthropicModelOptions.forEach { model ->
+                        val isSelected = model == anthropicModelDraft
+                        val subtitleRes = anthropicModelDescriptionRes(model)
+                        FeatureActionCard(
+                            title = anthropicModelDisplayName(model),
+                            subtitle = subtitleRes?.let { stringResource(it) },
+                            icon = if (isSelected) Icons.Filled.CheckCircle else Icons.Filled.Psychology,
+                            onClick = { anthropicModelDraft = model },
+                            enabled = true,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    onClick = {
+                        val normalized = anthropicModelDraft.trim()
+                        AppSettings.setAnthropicModel(context, normalized)
+                        anthropicModel = normalized
+                        showSelectAnthropicModelDialog = false
+                    },
+                ) {
+                    Text(stringResource(R.string.common_save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    colors =
+                        ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                    onClick = { showSelectAnthropicModelDialog = false },
                 ) {
                     Text(stringResource(R.string.common_cancel))
                 }
@@ -836,6 +1066,50 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        val currentProvider = ImageAnalysisProvider.fromStorage(imageProvider)
+        val providerSubtitle =
+            when (currentProvider) {
+                ImageAnalysisProvider.OPENAI -> stringResource(R.string.settings_image_analysis_provider_openai)
+                ImageAnalysisProvider.ANTHROPIC -> stringResource(R.string.settings_image_analysis_provider_anthropic)
+            }
+        FeatureActionCard(
+            title = stringResource(R.string.settings_image_analysis_provider),
+            subtitle = providerSubtitle,
+            icon = Icons.Filled.Psychology,
+            onClick = { showSelectImageProviderDialog = true },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (currentProvider == ImageAnalysisProvider.ANTHROPIC) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            val anthropicKeySubtitle =
+                if (anthropicApiKey.isBlank()) {
+                    stringResource(R.string.settings_not_set)
+                } else {
+                    "***"
+                }
+            FeatureActionCard(
+                title = stringResource(R.string.settings_anthropic_api_key),
+                subtitle = anthropicKeySubtitle,
+                icon = Icons.Filled.Key,
+                onClick = { showEditAnthropicKeyDialog = true },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            FeatureActionCard(
+                title = stringResource(R.string.settings_anthropic_model),
+                subtitle = anthropicModelDisplayName(anthropicModel),
+                icon = Icons.Filled.Psychology,
+                onClick = { showSelectAnthropicModelDialog = true },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         FeatureActionCard(
             title = stringResource(R.string.settings_ai_personalize),
             subtitle = stringResource(R.string.settings_ai_personalize_subtitle),
@@ -1122,6 +1396,25 @@ private fun openAiModelDescriptionRes(modelId: String): Int? {
     return when (modelId.trim()) {
         "gpt-4o-realtime-preview" -> R.string.settings_openai_model_gpt4o_desc
         "gpt-4o-mini-realtime-preview" -> R.string.settings_openai_model_gpt4omini_desc
+        else -> null
+    }
+}
+
+private fun anthropicModelDisplayName(modelId: String): String {
+    val raw = modelId.trim()
+    return when (raw) {
+        "claude-opus-4-7" -> "Claude Opus 4.7"
+        "claude-sonnet-4-6" -> "Claude Sonnet 4.6"
+        "claude-haiku-4-5" -> "Claude Haiku 4.5"
+        else -> raw
+    }
+}
+
+private fun anthropicModelDescriptionRes(modelId: String): Int? {
+    return when (modelId.trim()) {
+        "claude-opus-4-7" -> R.string.settings_anthropic_model_opus_desc
+        "claude-sonnet-4-6" -> R.string.settings_anthropic_model_sonnet_desc
+        "claude-haiku-4-5" -> R.string.settings_anthropic_model_haiku_desc
         else -> null
     }
 }

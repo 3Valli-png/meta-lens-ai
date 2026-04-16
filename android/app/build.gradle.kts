@@ -52,6 +52,16 @@ android {
             "OPENAI_MODEL",
             "\"${getBuildProperty("OPENAI_MODEL")}\"",
         )
+        buildConfigField(
+            "String",
+            "ANTHROPIC_API_KEY",
+            "\"${getBuildProperty("ANTHROPIC_API_KEY")}\"",
+        )
+        buildConfigField(
+            "String",
+            "ANTHROPIC_MODEL",
+            "\"${getBuildProperty("ANTHROPIC_MODEL")}\"",
+        )
     }
 
     buildTypes {
